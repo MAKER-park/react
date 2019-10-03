@@ -7,6 +7,51 @@ import Weather from "./Weather";
 
 const API_KEY = "c6dd74b29fe4d10b815c2a22fc36fb6b";
 
+
+export default class extends React.Component {
+  state = {
+    isLoading: true
+  };
+  getWeather = async (latitude, longitude) => {
+    const {
+      data: {
+        main: { temp },
+        weather
+      }
+    } = await axios.get(
+      `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}&units=metric`
+    );
+    this.setState({
+      isLoading: false,
+      condition: weather[0].main,
+      temp
+    });
+  };
+  getLocation = async () => {
+    try {
+      await Location.requestPermissionsAsync();
+      const {
+        coords: { latitude, longitude }
+      } = await Location.getCurrentPositionAsync();
+      this.getWeather(latitude, longitude);
+    } catch (error) {
+      Alert.alert("Can't find you.", "So sad");
+    }
+  };
+  componentDidMount() {
+    this.getLocation();
+  }
+  render() {
+    const { isLoading, temp, condition } = this.state;
+    return isLoading ? (
+      <Loading />
+    ) : (
+      <Weather temp={Math.round(temp)} condition={condition} />
+    );
+  }
+}
+
+/*
 export default class extends React.Component {
   state = {
     isLoading:true
@@ -41,7 +86,7 @@ export default class extends React.Component {
       //console.log(coords.latitude, coords.longitude);//coords라는 오브젝트로 호출되기 떄문에 이렇게 불러 올 수 있음
       /*const location = await Location.getCurrentPositionAsync();
       console.log(location);*/
-
+/*
     } catch (error) {
       Alert.alert("Can't find you.", "So sad");
     }
@@ -54,4 +99,5 @@ export default class extends React.Component {
     const { isLoading, temp ,condition} = this.state;
   return isLoading ? <Loading/> : <Weather temp={Math.round(temp)} condition={condition} />;//math.round : 해당 함수는 숫자를 반옯림하여 표시해
   }
-}
+}*/
+
