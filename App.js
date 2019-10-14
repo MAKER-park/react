@@ -26,6 +26,7 @@ export default class extends React.Component {
       condition: weather[0].main,
       temp
     });
+    console.log(temp,weather);
   };
   getLocation = async () => {
     try {
@@ -100,4 +101,3 @@ export default class extends React.Component {
   return isLoading ? <Loading/> : <Weather temp={Math.round(temp)} condition={condition} />;//math.round : 해당 함수는 숫자를 반옯림하여 표시해
   }
 }*/
-
