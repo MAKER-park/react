@@ -13,10 +13,16 @@ export default class extends React.Component {
     isLoading: true
   };
   getWeather = async (latitude, longitude) => {
+    const data2 = await axios.get(
+      `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}&units=metric`
+    );
+
     const {
       data: {
-        main: { temp },
-        weather
+        main:
+        { temp },
+        weather,
+        name
       }
     } = await axios.get(
       `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${API_KEY}&units=metric`
@@ -24,9 +30,11 @@ export default class extends React.Component {
     this.setState({
       isLoading: false,
       condition: weather[0].main,
-      temp
+      temp,
+      name
     });
-    console.log(temp,weather);
+    //console.log(data2);
+    console.log(temp,weather,name);
   };
   getLocation = async () => {
     try {
@@ -43,11 +51,11 @@ export default class extends React.Component {
     this.getLocation();
   }
   render() {
-    const { isLoading, temp, condition } = this.state;
+    const { isLoading, temp, condition, name} = this.state;
     return isLoading ? (
       <Loading />
     ) : (
-      <Weather temp={Math.round(temp)} condition={condition} />
+      <Weather temp={Math.round(temp)} condition={condition} name = {name} />//새로운 스크립트에 현재 여기서 얻은 변수를 넘기는방법
     );
   }
 }
